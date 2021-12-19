@@ -7,6 +7,7 @@ import ProductModel, { Product } from '../models/Product';
 import { queryParams } from '../interfaces/queryParams';
 
 class OrdersController {
+	//* Get Orders
 	public async getOrders (req: Request<{}, {}, {}, queryParams>, res: Response) {
 		try {
 			const { page, size, delivered } = req.query;

@@ -31,8 +31,7 @@ app.use('/api/v1/customers', routes.customersRoutes.router);
 app.use('/api/v1/products', routes.productsRoutes.router);
 app.use('/api/v1/orders', routes.ordersRoutes.router);
 app.use('/api/v1/users', routes.usersRoutes.router);
-// TODO
-//_ app.use('/api/v1/auth');
+app.use('/api/v1/auth', routes.authRoutes.router);
 
 app.listen(app.get('port'), '0.0.0.0', () => {
 	console.log(`Application running on port: ${ app.get('port') }`);

@@ -2,8 +2,7 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 
 import { usersController } from '../controllers';
-
-// TODO: ADD AUTH MIDDLEWARE
+import authMiddleware from '../middlewares/auth';
 
 class UsersRoutes {
 	public router: Router = Router();
@@ -14,6 +13,7 @@ class UsersRoutes {
 
 	config(): void {
 		this.router.post('/create',
+			authMiddleware,
 			[
 				check('name', 'The name is required.').not().isEmpty(),
 				check('email', 'Invalid email.').isEmail(),

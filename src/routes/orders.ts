@@ -2,8 +2,7 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 
 import { ordersController } from '../controllers';
-
-// TODO: ADD AUTH MIDDLEWARE
+import authMiddleware from '../middlewares/auth';
 
 class OrdersRoutes {
 	public router: Router = Router();
@@ -13,9 +12,13 @@ class OrdersRoutes {
 	}
 
 	config(): void {
-		this.router.get('/', ordersController.getOrders);
+		this.router.get('/',
+			// TODO: authMiddleware,
+			ordersController.getOrders
+		);
 
 		this.router.post('/new',
+			authMiddleware,
 			[
 				check('client', 'Customer ID invalid.').isMongoId(),
 				check('details', 'Details of the order should not be empty').not().isEmpty(),
@@ -27,9 +30,15 @@ class OrdersRoutes {
 			ordersController.createOrder
 		);
 
-		this.router.put('/cancel/:id', ordersController.cancelOrder);
+		this.router.put('/cancel/:id',
+			authMiddleware,
+			ordersController.cancelOrder
+		);
 
-		this.router.put('/delivery/:id', ordersController.deliveryOrder);
+		this.router.put('/delivery/:id',
+			authMiddleware,
+			ordersController.deliveryOrder
+		);
 	}
 }
 

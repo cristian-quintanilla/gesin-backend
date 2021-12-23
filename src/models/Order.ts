@@ -1,8 +1,13 @@
 import mongoose, { Schema, model, mongo } from 'mongoose';
 
+type Detail = {
+	product: string;
+	quantity: number;
+}
+
 export interface Order extends mongoose.Document {
 	client: string;
-	details: { product: string, quantity: number }[];
+	details: Detail[];
 	total: number;
 	delivered: boolean;
 }

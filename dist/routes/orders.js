@@ -14,9 +14,7 @@ class OrdersRoutes {
         this.config();
     }
     config() {
-        this.router.get('/', 
-        // TODO: authMiddleware,
-        controllers_1.ordersController.getOrders);
+        this.router.get('/', auth_1.default, controllers_1.ordersController.getOrders);
         this.router.post('/new', auth_1.default, [
             (0, express_validator_1.check)('client', 'Customer ID invalid.').isMongoId(),
             (0, express_validator_1.check)('details', 'Details of the order should not be empty').not().isEmpty(),

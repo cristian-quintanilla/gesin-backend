@@ -16,6 +16,7 @@ exports.ordersController = void 0;
 const express_validator_1 = require("express-validator");
 const Order_1 = __importDefault(require("../models/Order"));
 const Product_1 = __importDefault(require("../models/Product"));
+// import { queryParams } from '../interfaces/queryParams';
 class OrdersController {
     //* Get Orders
     getOrders(req, res) {

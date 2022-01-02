@@ -13,7 +13,7 @@ class OrdersRoutes {
 
 	config(): void {
 		this.router.get('/',
-			// TODO: authMiddleware,
+			authMiddleware,
 			ordersController.getOrders
 		);
 

@@ -4,11 +4,11 @@ import { Result, ValidationError, validationResult } from 'express-validator';
 import OrderModel, { Order } from '../models/Order';
 import { ProductType } from '../types';
 import ProductModel, { Product } from '../models/Product';
-import { queryParams } from '../interfaces/queryParams';
+// import { queryParams } from '../interfaces/queryParams';
 
 class OrdersController {
 	//* Get Orders
-	public async getOrders (req: Request<{}, {}, {}, queryParams>, res: Response) {
+	public async getOrders (req: Request, res: Response) {
 		try {
 			const { page, size, delivered } = req.query;
 			let orders;

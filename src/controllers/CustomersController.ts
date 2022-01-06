@@ -6,13 +6,23 @@ import CustomerModel, { Customer } from '../models/Customer';
 
 class CustomersController {
 	//* Get all Customers
-	public getCustomers = async (_req: Request, res: Response) => {
+	public getCustomers = async (req: Request, res: Response) => {
 		try {
-			const customers = await CustomerModel.find({
-				status: true
-			}).select('-__v');
+			const { page, size } = req.query;
 
-			res.json({ customers });
+			const customers = await CustomerModel.find({ status: true})
+			.limit( Number(size) * 1 )
+			.skip(( (Number(page) - 1) * Number(size) ))
+			.select('-__v');
+
+			//_  Get total documents
+			const count = await CustomerModel.countDocuments();
+
+			res.json({
+				customers,
+				totalPages: Math.ceil(count / Number(size)),
+				currentPage: Number(page)
+			});
 		} catch (err) {
 			console.log(err);
 			res.status(500).json({ msg: 'Error getting the list of customers.' });

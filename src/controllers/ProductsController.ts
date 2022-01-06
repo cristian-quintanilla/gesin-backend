@@ -6,12 +6,23 @@ import { ProductType } from '../types';
 
 class ProductsController {
 	//* Get all Products
-	public async getProducts (_req: Request, res: Response) {
+	public async getProducts (req: Request, res: Response) {
 		try {
-			const products = await ProductModel.find({
-				status: true
-			}).select('-__v');
-			res.json({ products });
+			const { page, size } = req.query;
+
+			const products = await ProductModel.find({ status: true })
+			.limit( Number(size) * 1 )
+			.skip(( (Number(page) - 1) * Number(size) ))
+			.select('-__v');
+
+			//_  Get total documents
+			const count = await ProductModel.countDocuments();
+
+			res.json({
+				products,
+				totalPages: Math.ceil(count / Number(size)),
+				currentPage: Number(page)
+			});
 		} catch (err) {
 			console.log(err);
 			res.status(500).json({ msg: 'Error getting the list of products' });

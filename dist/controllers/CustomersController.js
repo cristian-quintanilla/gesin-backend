@@ -18,12 +18,20 @@ const Customer_1 = __importDefault(require("../models/Customer"));
 class CustomersController {
     constructor() {
         //* Get all Customers
-        this.getCustomers = (_req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.getCustomers = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const customers = yield Customer_1.default.find({
-                    status: true
-                }).select('-__v');
-                res.json({ customers });
+                const { page, size } = req.query;
+                const customers = yield Customer_1.default.find({ status: true })
+                    .limit(Number(size) * 1)
+                    .skip(((Number(page) - 1) * Number(size)))
+                    .select('-__v');
+                //_  Get total documents
+                const count = yield Customer_1.default.countDocuments();
+                res.json({
+                    customers,
+                    totalPages: Math.ceil(count / Number(size)),
+                    currentPage: Number(page)
+                });
             }
             catch (err) {
                 console.log(err);

@@ -17,13 +17,21 @@ const express_validator_1 = require("express-validator");
 const Product_1 = __importDefault(require("../models/Product"));
 class ProductsController {
     //* Get all Products
-    getProducts(_req, res) {
+    getProducts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const products = yield Product_1.default.find({
-                    status: true
-                }).select('-__v');
-                res.json({ products });
+                const { page, size } = req.query;
+                const products = yield Product_1.default.find({ status: true })
+                    .limit(Number(size) * 1)
+                    .skip(((Number(page) - 1) * Number(size)))
+                    .select('-__v');
+                //_  Get total documents
+                const count = yield Product_1.default.countDocuments();
+                res.json({
+                    products,
+                    totalPages: Math.ceil(count / Number(size)),
+                    currentPage: Number(page)
+                });
             }
             catch (err) {
                 console.log(err);

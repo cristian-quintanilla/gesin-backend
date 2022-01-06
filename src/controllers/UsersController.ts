@@ -9,7 +9,7 @@ class UsersController {
 	public createUser = async (req: Request, res: Response) => {
 		//_ Chech if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
-		if ( !errors.isEmpty() ){
+		if ( !errors.isEmpty() ) {
 			return res.status(400).json({ errors: errors.array() });
 		}
 

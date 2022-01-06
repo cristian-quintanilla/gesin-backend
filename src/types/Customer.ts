@@ -4,5 +4,5 @@ export type CustomerType = {
 	company: string;
 	email: string;
 	address?: string;
-	phone?: string;
+	phone: string;
 }

@@ -13,7 +13,4 @@ export interface RequestWithUser extends Request {
 		_id: string;
 		name: string;
 	},
-	// headers: IncomingHttpHeaders & {
-  //   xAuthToken?: string
-  // }
 }

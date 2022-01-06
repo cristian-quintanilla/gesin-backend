@@ -5,7 +5,7 @@ export interface Customer extends mongoose.Document {
 	lastName: string;
 	company: string;
 	email: string;
-	address: string;
+	address?: string;
 	phone: string;
 	status: boolean;
 }

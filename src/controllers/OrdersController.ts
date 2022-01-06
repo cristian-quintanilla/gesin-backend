@@ -3,8 +3,7 @@ import { Result, ValidationError, validationResult } from 'express-validator';
 
 import OrderModel, { Order } from '../models/Order';
 import { ProductType } from '../types';
-import ProductModel, { Product } from '../models/Product';
-// import { queryParams } from '../interfaces/queryParams';
+import ProductModel from '../models/Product';
 
 class OrdersController {
 	//* Get Orders

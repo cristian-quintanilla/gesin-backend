@@ -20,18 +20,10 @@ class CustomersController {
         //* Get all Customers
         this.getCustomers = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const { page, size } = req.query;
-                const customers = yield Customer_1.default.find({ status: true })
-                    .limit(Number(size) * 1)
-                    .skip(((Number(page) - 1) * Number(size)))
-                    .select('-__v');
-                //_  Get total documents
-                const count = yield Customer_1.default.countDocuments();
-                res.json({
-                    customers,
-                    totalPages: Math.ceil(count / Number(size)),
-                    currentPage: Number(page)
-                });
+                const customers = yield Customer_1.default.find({
+                    status: true
+                }).select('-__v');
+                res.status(200).json({ customers });
             }
             catch (err) {
                 console.log(err);

@@ -45,9 +45,7 @@ class OrdersController {
 	public async createOrder (req: Request, res: Response) {
 		//_ Check if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
-		if ( !errors.isEmpty() ) {
-			return res.status(400).json({ errors: errors.array() });
-		}
+		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
 		try {
 			const { client, details } = req.body;
@@ -99,7 +97,10 @@ class OrdersController {
 
 			//_ Insert into the Database
 			await order.save();
-			res.status(201).json({ msg: 'Order saved sucessfully and ready to delivery.' });
+			res.status(201).json({
+				order,
+				msg: 'Order saved sucessfully and ready to delivery.'
+			});
 		} catch (err) {
 			console.log(err);
 			res.status(500).json({ msg: 'Error saving the new order.' });
@@ -113,8 +114,7 @@ class OrdersController {
 		try {
 			//_ Check if the order exists
 			let order = await OrderModel.findById(id);
-			if ( !order )
-				return res.status(404).json({ msg: 'Order not found.' });
+			if (!order) return res.status(404).json({ msg: 'Order not found.' });
 
 			//_ Update the Quantity of the products
 			const { details } = order;
@@ -158,8 +158,7 @@ class OrdersController {
 			const { id } = req.params;
 			let order = await OrderModel.findById(id);
 
-			if ( !order )
-				return res.status(404).json({ msg: 'Order not found.' });
+			if (!order) return res.status(404).json({ msg: 'Order not found.' });
 
 			//_ Mark order as delivered
 			await OrderModel.findOneAndUpdate(
@@ -167,7 +166,10 @@ class OrdersController {
 				{ delivered: true }
 			);
 
-			res.status(200).json({ msg: 'Order delivered successfully' });
+			res.status(200).json({
+				order,
+				msg: 'Order delivered successfully'
+			});
 		} catch (err) {
 			console.log(err);
 			res.status(500).json({ msg: 'Error delivering the order.' });

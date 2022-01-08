@@ -25,9 +25,7 @@ class ProductsController {
 			const { id } = req.params;
 			const product = await ProductModel.findById(id).select('-__v');
 
-			if ( !product ) {
-				return res.status(404).json({ msg: 'Product not found.' });
-			}
+			if (!product) return res.status(404).json({ msg: 'Product not found.' });
 
 			res.json({ product });
 		} catch (err) {
@@ -40,9 +38,7 @@ class ProductsController {
 	public async createProduct (req: Request, res: Response) {
 		//_ Check if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
-		if ( !errors.isEmpty() ) {
-			return res.status(400).json({ errors: errors.array() });
-		}
+		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
 		try {
 			const { name, stock, price } = req.body;
@@ -56,7 +52,10 @@ class ProductsController {
 
 			//_ Intert into the Database
 			await product.save();
-			res.status(201).json({ msg: 'Product added successfully.' });
+			res.status(201).json({
+				product,
+				msg: 'Product added successfully.'
+			});
 		} catch (err) {
 			console.log(err);
 			res.status(500).json({ msg: 'Error creating the product.' });
@@ -69,9 +68,7 @@ class ProductsController {
 			//_ Check if the Product is in the Database
 			const { id } = req.params;
 			const product = await ProductModel.findById(id);
-			if ( !product ) {
-				return res.status(404).json({ msg: 'Product not found.' });
-			}
+			if (!product) return res.status(404).json({ msg: 'Product not found.' });
 
 			//_ Delete the Product (Change Status)
 			await product.updateOne({ status: false });
@@ -86,9 +83,7 @@ class ProductsController {
 	public async updateProduct (req: Request, res: Response) {
 		//_ Check if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
-		if ( !errors.isEmpty() ) {
-			return res.status(400).json({ errors: errors.array() });
-		}
+		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
 		//_ Extract Product information
 		const { id } = req.params;
@@ -104,8 +99,7 @@ class ProductsController {
 		try {
 			//_ Check if the product exists
 			let product = await ProductModel.findById(id);
-			if ( !product )
-				return res.status(404).json({ msg: 'Product not found.'});
+			if (!product) return res.status(404).json({ msg: 'Product not found.'});
 
 			//_ Update data
 			product = await ProductModel.findByIdAndUpdate(
@@ -114,7 +108,10 @@ class ProductsController {
 				{ new: true }
 			);
 
-			res.status(200).json({ msg: 'Product updated sucessfully.' });
+			res.status(200).json({
+				product,
+				msg: 'Product updated sucessfully.'
+			});
 		} catch (err) {
 			console.log(err);
 			res.status(500).json({ msg: 'Error updating product data.' });

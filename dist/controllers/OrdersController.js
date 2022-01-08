@@ -55,9 +55,8 @@ class OrdersController {
         return __awaiter(this, void 0, void 0, function* () {
             //_ Check if there are errors
             const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty()) {
+            if (!errors.isEmpty())
                 return res.status(400).json({ errors: errors.array() });
-            }
             try {
                 const { client, details } = req.body;
                 //_ Verify if the quantity is greater than the stock
@@ -99,7 +98,10 @@ class OrdersController {
                 });
                 //_ Insert into the Database
                 yield order.save();
-                res.status(201).json({ msg: 'Order saved sucessfully and ready to delivery.' });
+                res.status(201).json({
+                    order,
+                    msg: 'Order saved sucessfully and ready to delivery.'
+                });
             }
             catch (err) {
                 console.log(err);
@@ -156,7 +158,10 @@ class OrdersController {
                     return res.status(404).json({ msg: 'Order not found.' });
                 //_ Mark order as delivered
                 yield Order_1.default.findOneAndUpdate({ _id: id }, { delivered: true });
-                res.status(200).json({ msg: 'Order delivered successfully' });
+                res.status(200).json({
+                    order,
+                    msg: 'Order delivered successfully'
+                });
             }
             catch (err) {
                 console.log(err);

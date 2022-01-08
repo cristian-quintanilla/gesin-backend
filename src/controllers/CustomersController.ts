@@ -25,9 +25,7 @@ class CustomersController {
 			const { id } = req.params;
 			const customer = await CustomerModel.findById(id).select('-__v');
 
-			if ( !customer ){
-				return res.status(404).json({ msg: 'Customer not found.' });
-			}
+			if (!customer) return res.status(404).json({ msg: 'Customer not found.' });
 
 			res.json({ customer });
 		} catch (err) {
@@ -40,18 +38,14 @@ class CustomersController {
 	public createCustomer = async (req: Request, res: Response) => {
 		//_ Chech if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
-		if ( !errors.isEmpty() ) {
-			return res.status(400).json({ errors: errors.array() });
-		}
+		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
 		try {
 			const { firstName, lastName, company, email, address, phone } = req.body;
 
 			//_ Check if the Email already exists
 			const customer = await CustomerModel.findOne({ email });
-			if ( customer ) {
-				return res.status(400).json({ msg: 'E-mail is already in use.' });
-			}
+			if (customer) return res.status(400).json({ msg: 'E-mail is already in use.' });
 
 			//_ Create the customer
 			const newCustomer: Customer = new CustomerModel({
@@ -65,7 +59,10 @@ class CustomersController {
 
 			//_ Insert into the Database
 			await newCustomer.save();
-			res.status(201).json({ msg: 'Customer created successfully' });
+			res.status(201).json({
+				customer: newCustomer,
+				msg: 'Customer created successfully'
+			});
 		} catch (err) {
 			console.log(err);
 			res.status(500).json({ msg: 'Error creating the customer.' });
@@ -78,9 +75,7 @@ class CustomersController {
 			//_ Check if the Customer is in the Database
 			const { id } = req.params;
 			const customer = await CustomerModel.findById(id);
-			if ( !customer ) {
-				return res.status(404).json({ msg: 'Customer not found.' });
-			}
+			if (!customer) return res.status(404).json({ msg: 'Customer not found.' });
 
 			//_ Delete the Customer (Change Status)
 			await customer.updateOne({ status: false });
@@ -95,9 +90,7 @@ class CustomersController {
 	public updateCustomer = async (req: Request, res: Response) => {
 		//_ Chech if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
-		if ( !errors.isEmpty() ) {
-			return res.status(400).json({ errors: errors.array() });
-		}
+		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
 		//_ Extract Customer information
 		const { id } = req.params;
@@ -116,8 +109,7 @@ class CustomersController {
 		try {
 			//_ Check if the user exists
 			let customer = await CustomerModel.findById(id);
-			if ( !customer )
-				return res.status(404).json({ msg: 'Customer not found.' });
+			if (!customer) return res.status(404).json({ msg: 'Customer not found.' });
 
 			//_ Update data
 			customer = await CustomerModel.findByIdAndUpdate(
@@ -126,7 +118,10 @@ class CustomersController {
 				{ new: true }
 			);
 
-			res.status(200).json({ msg: 'Customer updated successfully.' });
+			res.status(200).json({
+				customer,
+				msg: 'Customer updated successfully.'
+			});
 		} catch (err) {
 			console.log(err);
 			res.status(500).json({ msg: 'Error updating customer data.' });

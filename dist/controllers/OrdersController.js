@@ -27,8 +27,8 @@ class OrdersController {
                 //_ Filter or not
                 filter = delivered ? { delivered } : {};
                 orders = yield Order_1.default.find(filter)
-                    .limit(Number(size) * 1)
-                    .skip(((Number(page) - 1) * Number(size)))
+                    .limit(Number(size))
+                    .skip((Number(page) - 1) * Number(size))
                     .populate({ path: 'client' })
                     .populate({
                     path: 'details',
@@ -36,7 +36,7 @@ class OrdersController {
                 })
                     .select('-__v');
                 //_  Get total documents
-                const count = yield Order_1.default.countDocuments();
+                const count = yield Order_1.default.countDocuments(filter);
                 //_ Return the orders (with / without filters), total pages and current page
                 res.json({
                     orders,

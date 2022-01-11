@@ -17,8 +17,8 @@ class OrdersController {
 			filter = delivered ? { delivered } : {}
 
 			orders = await OrderModel.find(filter)
-			.limit( Number(size) * 1 )
-			.skip(( (Number(page) - 1) * Number(size) ))
+			.limit(Number(size))
+			.skip((Number(page) - 1) * Number(size))
 			.populate({ path: 'client' })
 			.populate({
 				path: 'details',
@@ -27,7 +27,7 @@ class OrdersController {
 			.select('-__v');
 
 			//_  Get total documents
-			const count = await OrderModel.countDocuments();
+			const count = await OrderModel.countDocuments(filter);
 
 			//_ Return the orders (with / without filters), total pages and current page
 			res.json({

@@ -24,6 +24,7 @@ class OrdersController {
 				path: 'details',
 				populate: { path: 'product', select: 'name price' }
 			})
+			.sort({ createdAt: 'desc' })
 			.select('-__v');
 
 			//_  Get total documents
@@ -60,8 +61,8 @@ class OrdersController {
 				try {
 					const product = await ProductModel.find({ _id: idsArr[id] });
 
-					if ( details[i].quantity >= product[0].stock) {
-						return res.status(400).json({ msg: 'You cannot select that quantity.' });
+					if ( details[i].quantity > product[0].stock) {
+						return res.status(400).json({ msg: `You cannot select that quantity for ${ product[0].name }.` });
 					} else if ( !product[0].status ) {
 						return res.status(400).json({ msg: 'The product is not available.' });
 					} else {

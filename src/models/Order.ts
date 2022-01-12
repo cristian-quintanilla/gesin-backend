@@ -32,6 +32,6 @@ const OrderSchema = new Schema({
 		type: Boolean,
 		default: false,
 	}
-});
+}, { timestamps: true });
 
 export default model<Order>('Order', OrderSchema);

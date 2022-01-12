@@ -34,6 +34,7 @@ class OrdersController {
                     path: 'details',
                     populate: { path: 'product', select: 'name price' }
                 })
+                    .sort({ createdAt: 'desc' })
                     .select('-__v');
                 //_  Get total documents
                 const count = yield Order_1.default.countDocuments(filter);
@@ -67,8 +68,8 @@ class OrdersController {
                 for (const id in idsArr) {
                     try {
                         const product = yield Product_1.default.find({ _id: idsArr[id] });
-                        if (details[i].quantity >= product[0].stock) {
-                            return res.status(400).json({ msg: 'You cannot select that quantity.' });
+                        if (details[i].quantity > product[0].stock) {
+                            return res.status(400).json({ msg: `You cannot select that quantity for ${product[0].name}.` });
                         }
                         else if (!product[0].status) {
                             return res.status(400).json({ msg: 'The product is not available.' });

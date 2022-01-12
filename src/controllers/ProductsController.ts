@@ -9,7 +9,8 @@ class ProductsController {
 	public async getProducts (req: Request, res: Response) {
 		try {
 			const products = await ProductModel.find({
-				status: true
+				status: true,
+				stock: { $gt: 0 }
 			}).select('-__v');
 
 			res.status(200).json({ products });

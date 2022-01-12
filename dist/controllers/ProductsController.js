@@ -21,7 +21,8 @@ class ProductsController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const products = yield Product_1.default.find({
-                    status: true
+                    status: true,
+                    stock: { $gt: 0 }
                 }).select('-__v');
                 res.status(200).json({ products });
             }

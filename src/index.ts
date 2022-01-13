@@ -17,14 +17,14 @@ connectDatabase();
 
 //* Enable CORS Option
 const corsOptions = {	origin: `${ process.env.FRONTEND_URL }` };
-app.use( cors(corsOptions) );
+app.use(cors(corsOptions));
 
 //* Settings
 app.set('port', process.env.PORT || 4000);
 
 //* Middlewares
-app.use( express.json() );
-app.use( express.urlencoded({ extended: false }) );
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 //* Routes
 app.use('/api/v1/customers', routes.customersRoutes.router);

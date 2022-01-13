@@ -15,7 +15,6 @@ class ProductsController {
 
 			res.status(200).json({ products });
 		} catch (err) {
-			console.log(err);
 			res.status(500).json({ msg: 'Error getting the list of products' });
 		}
 	}
@@ -30,7 +29,6 @@ class ProductsController {
 
 			res.json({ product });
 		} catch (err) {
-			console.log(err);
 			res.status(500).json({ msg: 'Error getting the product.' });
 		}
 	}
@@ -58,7 +56,6 @@ class ProductsController {
 				msg: 'Product added successfully.'
 			});
 		} catch (err) {
-			console.log(err);
 			res.status(500).json({ msg: 'Error creating the product.' });
 		}
 	}
@@ -75,7 +72,6 @@ class ProductsController {
 			await product.updateOne({ status: false });
 			res.status(200).json({ msg: 'Product deleted.' });
 		} catch (err) {
-			console.log(err);
 			res.status(500).json({ msg: 'Error deleting the product.' });
 		}
 	}
@@ -114,7 +110,6 @@ class ProductsController {
 				msg: 'Product updated sucessfully.'
 			});
 		} catch (err) {
-			console.log(err);
 			res.status(500).json({ msg: 'Error updating product data.' });
 		}
 	}

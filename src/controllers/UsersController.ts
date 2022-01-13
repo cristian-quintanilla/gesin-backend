@@ -9,18 +9,14 @@ class UsersController {
 	public createUser = async (req: Request, res: Response) => {
 		//_ Chech if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
-		if ( !errors.isEmpty() ) {
-			return res.status(400).json({ errors: errors.array() });
-		}
+		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
 		try {
 			const { name, email, password } = req.body;
 
 			//_ Check if the Email already exists
 			const user = await UserModel.findOne({ email });
-			if ( user ) {
-				return res.status(400).json({ msg: 'E-mail is already in use.' });
-			}
+			if (user) return res.status(400).json({ msg: 'E-mail is already in use.' });
 
 			//_ Create the user
 			const newUser: User = new UserModel({
@@ -37,7 +33,6 @@ class UsersController {
 			await newUser.save();
 			res.status(201).json({ msg: 'User created successfully.' });
 		} catch (err) {
-			console.log(err);
 			res.status(500).json({ msg: 'Error creating the user.' });
 		}
 	}

@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { IncomingHttpHeaders } from 'http';
 
 export interface DataStoredInToken {
 	user: {

@@ -37,7 +37,6 @@ class OrdersController {
 				currentPage: Number(page)
 			});
 		} catch (err) {
-			console.log(err);
 			res.status(500).json({ msg: 'Error getting the orders.' });
 		}
 	}
@@ -61,9 +60,9 @@ class OrdersController {
 				try {
 					const product = await ProductModel.find({ _id: idsArr[id] });
 
-					if ( details[i].quantity > product[0].stock) {
+					if (details[i].quantity > product[0].stock) {
 						return res.status(400).json({ msg: `You cannot select that quantity for ${ product[0].name }.` });
-					} else if ( !product[0].status ) {
+					} else if (!product[0].status) {
 						return res.status(400).json({ msg: 'The product is not available.' });
 					} else {
 						//_ Remove the quantity selected from the stock
@@ -83,7 +82,7 @@ class OrdersController {
 						);
 					}
 				} catch (err) {
-					console.log(err);
+					res.status(500).json({ msg: 'Error creating the order.' });
 				}
 
 				i++;
@@ -100,10 +99,9 @@ class OrdersController {
 			await order.save();
 			res.status(201).json({
 				order,
-				msg: 'Order saved sucessfully and ready to delivery.'
+				msg: 'Order saved sucessfully and ready for delivery.'
 			});
 		} catch (err) {
-			console.log(err);
 			res.status(500).json({ msg: 'Error saving the new order.' });
 		}
 	}
@@ -137,7 +135,7 @@ class OrdersController {
 						{ new: true }
 					);
 				} catch (err) {
-					console.log(err);
+					res.status(500).json({ msg: 'Error canceling the order.' });
 				}
 
 				i++;
@@ -147,7 +145,6 @@ class OrdersController {
 			await OrderModel.findByIdAndRemove(id);
 			res.status(200).json({ msg: 'Order canceled.' });
 		} catch (err) {
-			console.log(err);
 			res.status(500).json({ msg: 'Error canceling the order.' });
 		}
 	}
@@ -172,7 +169,6 @@ class OrdersController {
 				msg: 'Order delivered successfully'
 			});
 		} catch (err) {
-			console.log(err);
 			res.status(500).json({ msg: 'Error delivering the order.' });
 		}
 	}

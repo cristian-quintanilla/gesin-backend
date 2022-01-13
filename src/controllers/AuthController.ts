@@ -11,23 +11,17 @@ class AuthController {
 	public authenticateUser = async (req: Request, res: Response) => {
 		//_ Chech if there are errors
 		const errors = validationResult(req);
-		if ( !errors.isEmpty() ){
-			return res.status(400).json({ errors: errors.array() });
-		}
+		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
 		try {
 			//_ Verify if the user exists
 			const { email, password } = req.body;
 			let user = await UserModel.findOne({ email });
-			if ( !user ) {
-				return res.status(400).json({ msg: 'No User with that E-mail.' });
-			}
+			if (!user) return res.status(400).json({ msg: 'No User with that E-mail.' });
 
 			//_ Verify if the password is correct
 			const passwordCorrect = await bcryptjs.compare(password, user.password);
-			if ( !passwordCorrect ) {
-				return res.status(400).json({ msg: 'Password is incorrect.' });
-			}
+			if (!passwordCorrect) return res.status(400).json({ msg: 'Password is incorrect.' });
 
 			//_ Create and assign a token
 			const payload: DataStoredInToken = {
@@ -46,7 +40,7 @@ class AuthController {
 				res.json({ token });
 			});
 		} catch (err) {
-			console.error(err);
+			res.status(401).json({ msg: 'Unauthorized user.' });
 		}
 	}
 
@@ -57,8 +51,7 @@ class AuthController {
 			const user = await UserModel.findById(req.user?._id).select('-password');
 			res.json({ user });
 		} catch (err) {
-			console.error(err);
-			res.status(500).send('Server Error');
+			res.status(404).send({ msg: 'User not found.' });
 		}
 	}
 }

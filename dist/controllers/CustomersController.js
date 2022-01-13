@@ -26,7 +26,6 @@ class CustomersController {
                 res.status(200).json({ customers });
             }
             catch (err) {
-                console.log(err);
                 res.status(500).json({ msg: 'Error getting the list of customers.' });
             }
         });
@@ -40,7 +39,6 @@ class CustomersController {
                 res.json({ customer });
             }
             catch (err) {
-                console.log(err);
                 res.status(500).json({ msg: 'Error getting customer.' });
             }
         });
@@ -73,7 +71,6 @@ class CustomersController {
                 });
             }
             catch (err) {
-                console.log(err);
                 res.status(500).json({ msg: 'Error creating the customer.' });
             }
         });
@@ -90,7 +87,6 @@ class CustomersController {
                 res.status(200).json({ msg: 'Customer deleted' });
             }
             catch (err) {
-                console.log(err);
                 res.status(500).json({ msg: 'Error deleting the customer.' });
             }
         });
@@ -125,7 +121,6 @@ class CustomersController {
                 });
             }
             catch (err) {
-                console.log(err);
                 res.status(500).json({ msg: 'Error updating customer data.' });
             }
         });

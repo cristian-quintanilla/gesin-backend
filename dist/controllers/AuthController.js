@@ -23,21 +23,18 @@ class AuthController {
         this.authenticateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             //_ Chech if there are errors
             const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty()) {
+            if (!errors.isEmpty())
                 return res.status(400).json({ errors: errors.array() });
-            }
             try {
                 //_ Verify if the user exists
                 const { email, password } = req.body;
                 let user = yield User_1.default.findOne({ email });
-                if (!user) {
+                if (!user)
                     return res.status(400).json({ msg: 'No User with that E-mail.' });
-                }
                 //_ Verify if the password is correct
                 const passwordCorrect = yield bcryptjs_1.default.compare(password, user.password);
-                if (!passwordCorrect) {
+                if (!passwordCorrect)
                     return res.status(400).json({ msg: 'Password is incorrect.' });
-                }
                 //_ Create and assign a token
                 const payload = {
                     user: {
@@ -55,7 +52,7 @@ class AuthController {
                 });
             }
             catch (err) {
-                console.error(err);
+                res.status(401).json({ msg: 'Unauthorized user.' });
             }
         });
         //* Get Authenticated User
@@ -67,8 +64,7 @@ class AuthController {
                 res.json({ user });
             }
             catch (err) {
-                console.error(err);
-                res.status(500).send('Server Error');
+                res.status(404).send({ msg: 'User not found.' });
             }
         });
     }

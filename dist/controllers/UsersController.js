@@ -22,16 +22,14 @@ class UsersController {
         this.createUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             //_ Chech if there are errors
             const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty()) {
+            if (!errors.isEmpty())
                 return res.status(400).json({ errors: errors.array() });
-            }
             try {
                 const { name, email, password } = req.body;
                 //_ Check if the Email already exists
                 const user = yield User_1.default.findOne({ email });
-                if (user) {
+                if (user)
                     return res.status(400).json({ msg: 'E-mail is already in use.' });
-                }
                 //_ Create the user
                 const newUser = new User_1.default({
                     name,
@@ -46,7 +44,6 @@ class UsersController {
                 res.status(201).json({ msg: 'User created successfully.' });
             }
             catch (err) {
-                console.log(err);
                 res.status(500).json({ msg: 'Error creating the user.' });
             }
         });

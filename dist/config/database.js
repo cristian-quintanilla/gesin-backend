@@ -20,7 +20,6 @@ const connectDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
         console.log('Database connected...');
     }
     catch (error) {
-        console.log(error);
         throw new Error('Error initializing Database.');
     }
 });

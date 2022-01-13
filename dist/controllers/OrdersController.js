@@ -46,7 +46,6 @@ class OrdersController {
                 });
             }
             catch (err) {
-                console.log(err);
                 res.status(500).json({ msg: 'Error getting the orders.' });
             }
         });
@@ -87,7 +86,7 @@ class OrdersController {
                         }
                     }
                     catch (err) {
-                        console.log(err);
+                        res.status(500).json({ msg: 'Error creating the order.' });
                     }
                     i++;
                 }
@@ -101,11 +100,10 @@ class OrdersController {
                 yield order.save();
                 res.status(201).json({
                     order,
-                    msg: 'Order saved sucessfully and ready to delivery.'
+                    msg: 'Order saved sucessfully and ready for delivery.'
                 });
             }
             catch (err) {
-                console.log(err);
                 res.status(500).json({ msg: 'Error saving the new order.' });
             }
         });
@@ -134,7 +132,7 @@ class OrdersController {
                         yield Product_1.default.findByIdAndUpdate({ _id: product[0].id }, { $set: newProduct }, { new: true });
                     }
                     catch (err) {
-                        console.log(err);
+                        res.status(500).json({ msg: 'Error canceling the order.' });
                     }
                     i++;
                 }
@@ -143,7 +141,6 @@ class OrdersController {
                 res.status(200).json({ msg: 'Order canceled.' });
             }
             catch (err) {
-                console.log(err);
                 res.status(500).json({ msg: 'Error canceling the order.' });
             }
         });
@@ -165,7 +162,6 @@ class OrdersController {
                 });
             }
             catch (err) {
-                console.log(err);
                 res.status(500).json({ msg: 'Error delivering the order.' });
             }
         });

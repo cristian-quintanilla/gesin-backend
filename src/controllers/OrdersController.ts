@@ -150,7 +150,7 @@ class OrdersController {
 	}
 
 	//* Delivery Order
-	public async deliveryOrder (req: Request, res: Response) {
+	public async deliverOrder (req: Request, res: Response) {
 		try {
 			//_ Check if the order exists
 			const { id } = req.params;
@@ -161,7 +161,8 @@ class OrdersController {
 			//_ Mark order as delivered
 			await OrderModel.findOneAndUpdate(
 				{ _id: id },
-				{ delivered: true }
+				{ delivered: true },
+				{ updatedAt: Date.now() }
 			);
 
 			res.status(200).json({

@@ -35,9 +35,9 @@ class OrdersRoutes {
 			ordersController.cancelOrder
 		);
 
-		this.router.put('/delivery/:id',
+		this.router.put('/deliver/:id',
 			authMiddleware,
-			ordersController.deliveryOrder
+			ordersController.deliverOrder
 		);
 	}
 }

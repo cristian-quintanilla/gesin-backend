@@ -146,7 +146,7 @@ class OrdersController {
         });
     }
     //* Delivery Order
-    deliveryOrder(req, res) {
+    deliverOrder(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 //_ Check if the order exists
@@ -155,7 +155,7 @@ class OrdersController {
                 if (!order)
                     return res.status(404).json({ msg: 'Order not found.' });
                 //_ Mark order as delivered
-                yield Order_1.default.findOneAndUpdate({ _id: id }, { delivered: true });
+                yield Order_1.default.findOneAndUpdate({ _id: id }, { delivered: true }, { updatedAt: Date.now() });
                 res.status(200).json({
                     order,
                     msg: 'Order delivered successfully'

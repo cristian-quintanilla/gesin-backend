@@ -24,7 +24,7 @@ class OrdersRoutes {
             (0, express_validator_1.check)('details.*.quantity', 'Quantity of the product should be a number.').isNumeric(),
         ], controllers_1.ordersController.createOrder);
         this.router.put('/cancel/:id', auth_1.default, controllers_1.ordersController.cancelOrder);
-        this.router.put('/delivery/:id', auth_1.default, controllers_1.ordersController.deliveryOrder);
+        this.router.put('/deliver/:id', auth_1.default, controllers_1.ordersController.deliverOrder);
     }
 }
 exports.ordersRoutes = new OrdersRoutes();

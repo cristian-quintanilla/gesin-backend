@@ -35,21 +35,21 @@ class ProductsController {
 
 	//* Create Product
 	public async createProduct (req: Request, res: Response) {
-		//_ Check if there are errors
+		// Check if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
 		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
 		try {
 			const { name, stock, price } = req.body;
 
-			//_ Create the product
+			// Create the product
 			const product: Product = new ProductModel({
 				name,
 				stock,
 				price
 			});
 
-			//_ Intert into the Database
+			// Intert into the Database
 			await product.save();
 			res.status(201).json({
 				product,
@@ -63,12 +63,12 @@ class ProductsController {
 	//* Delete Product
 	public async deleteProduct (req: Request, res: Response) {
 		try {
-			//_ Check if the Product is in the Database
+			// Check if the Product is in the Database
 			const { id } = req.params;
 			const product = await ProductModel.findById(id);
 			if (!product) return res.status(404).json({ msg: 'Product not found.' });
 
-			//_ Delete the Product (Change Status)
+			// Delete the Product (Change Status)
 			await product.updateOne({ status: false });
 			res.status(200).json({ msg: 'Product deleted.' });
 		} catch (err) {
@@ -78,15 +78,15 @@ class ProductsController {
 
 	//* Update Product
 	public async updateProduct (req: Request, res: Response) {
-		//_ Check if there are errors
+		// Check if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
 		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-		//_ Extract Product information
+		// Extract Product information
 		const { id } = req.params;
 		const { name, stock, price } = req.body;
 
-		//_ Create a new Object
+		// Create a new Object
 		const newProduct: ProductType = {
 			name,
 			stock,
@@ -94,11 +94,11 @@ class ProductsController {
 		};
 
 		try {
-			//_ Check if the product exists
+			// Check if the product exists
 			let product = await ProductModel.findById(id);
 			if (!product) return res.status(404).json({ msg: 'Product not found.'});
 
-			//_ Update data
+			// Update data
 			product = await ProductModel.findByIdAndUpdate(
 				{ _id: id },
 				{ $set: newProduct },

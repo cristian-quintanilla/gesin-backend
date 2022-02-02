@@ -44,17 +44,17 @@ class CustomersController {
         });
         //* Create Customer
         this.createCustomer = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            //_ Chech if there are errors
+            // Chech if there are errors
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty())
                 return res.status(400).json({ errors: errors.array() });
             try {
                 const { firstName, lastName, company, email, address, phone } = req.body;
-                //_ Check if the Email already exists
+                // Check if the Email already exists
                 const customer = yield Customer_1.default.findOne({ email });
                 if (customer)
                     return res.status(400).json({ msg: 'E-mail is already in use.' });
-                //_ Create the customer
+                // Create the customer
                 const newCustomer = new Customer_1.default({
                     firstName,
                     lastName,
@@ -63,7 +63,7 @@ class CustomersController {
                     address,
                     phone
                 });
-                //_ Insert into the Database
+                // Insert into the Database
                 yield newCustomer.save();
                 res.status(201).json({
                     customer: newCustomer,
@@ -77,12 +77,12 @@ class CustomersController {
         //* Delete Customber
         this.deleteCustomer = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                //_ Check if the Customer is in the Database
+                // Check if the Customer is in the Database
                 const { id } = req.params;
                 const customer = yield Customer_1.default.findById(id);
                 if (!customer)
                     return res.status(404).json({ msg: 'Customer not found.' });
-                //_ Delete the Customer (Change Status)
+                // Delete the Customer (Change Status)
                 yield customer.updateOne({ status: false });
                 res.status(200).json({ msg: 'Customer deleted' });
             }
@@ -92,14 +92,14 @@ class CustomersController {
         });
         //* Update Customer
         this.updateCustomer = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            //_ Chech if there are errors
+            // Chech if there are errors
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty())
                 return res.status(400).json({ errors: errors.array() });
-            //_ Extract Customer information
+            // Extract Customer information
             const { id } = req.params;
             const { firstName, lastName, company, email, address, phone } = req.body;
-            //_ Create a new Object
+            // Create a new Object
             const newCustomer = {
                 firstName,
                 lastName,
@@ -109,11 +109,11 @@ class CustomersController {
                 phone,
             };
             try {
-                //_ Check if the user exists
+                // Check if the user exists
                 let customer = yield Customer_1.default.findById(id);
                 if (!customer)
                     return res.status(404).json({ msg: 'Customer not found.' });
-                //_ Update data
+                // Update data
                 customer = yield Customer_1.default.findByIdAndUpdate({ _id: id }, { $set: newCustomer }, { new: true });
                 res.status(200).json({
                     customer,

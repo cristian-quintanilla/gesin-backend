@@ -14,8 +14,11 @@ class OrdersRoutes {
         this.config();
     }
     config() {
-        this.router.get('/', auth_1.default, controllers_1.ordersController.getOrders);
-        this.router.post('/new', auth_1.default, [
+        this.router.use(auth_1.default);
+        this.router.get('/', controllers_1.ordersController.getOrders);
+        this.router.put('/cancel/:id', controllers_1.ordersController.cancelOrder);
+        this.router.put('/deliver/:id', controllers_1.ordersController.deliverOrder);
+        this.router.post('/new', [
             (0, express_validator_1.check)('client', 'Customer ID invalid.').isMongoId(),
             (0, express_validator_1.check)('details', 'Details of the order should not be empty').not().isEmpty(),
             (0, express_validator_1.check)('details.*.product', 'ID of the product is required.').not().isEmpty(),
@@ -23,8 +26,6 @@ class OrdersRoutes {
             (0, express_validator_1.check)('details.*.quantity', 'Quantity of the product is required.').not().isEmpty(),
             (0, express_validator_1.check)('details.*.quantity', 'Quantity of the product should be a number.').isNumeric(),
         ], controllers_1.ordersController.createOrder);
-        this.router.put('/cancel/:id', auth_1.default, controllers_1.ordersController.cancelOrder);
-        this.router.put('/deliver/:id', auth_1.default, controllers_1.ordersController.deliverOrder);
     }
 }
 exports.ordersRoutes = new OrdersRoutes();

@@ -49,19 +49,19 @@ class ProductsController {
     //* Create Product
     createProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            //_ Check if there are errors
+            // Check if there are errors
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty())
                 return res.status(400).json({ errors: errors.array() });
             try {
                 const { name, stock, price } = req.body;
-                //_ Create the product
+                // Create the product
                 const product = new Product_1.default({
                     name,
                     stock,
                     price
                 });
-                //_ Intert into the Database
+                // Intert into the Database
                 yield product.save();
                 res.status(201).json({
                     product,
@@ -77,12 +77,12 @@ class ProductsController {
     deleteProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                //_ Check if the Product is in the Database
+                // Check if the Product is in the Database
                 const { id } = req.params;
                 const product = yield Product_1.default.findById(id);
                 if (!product)
                     return res.status(404).json({ msg: 'Product not found.' });
-                //_ Delete the Product (Change Status)
+                // Delete the Product (Change Status)
                 yield product.updateOne({ status: false });
                 res.status(200).json({ msg: 'Product deleted.' });
             }
@@ -94,25 +94,25 @@ class ProductsController {
     //* Update Product
     updateProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            //_ Check if there are errors
+            // Check if there are errors
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty())
                 return res.status(400).json({ errors: errors.array() });
-            //_ Extract Product information
+            // Extract Product information
             const { id } = req.params;
             const { name, stock, price } = req.body;
-            //_ Create a new Object
+            // Create a new Object
             const newProduct = {
                 name,
                 stock,
                 price
             };
             try {
-                //_ Check if the product exists
+                // Check if the product exists
                 let product = yield Product_1.default.findById(id);
                 if (!product)
                     return res.status(404).json({ msg: 'Product not found.' });
-                //_ Update data
+                // Update data
                 product = yield Product_1.default.findByIdAndUpdate({ _id: id }, { $set: newProduct }, { new: true });
                 res.status(200).json({
                     product,

@@ -24,7 +24,7 @@ class OrdersController {
                 const { page, size, delivered } = req.query;
                 let orders;
                 let filter;
-                //_ Filter or not
+                // Filter or not
                 filter = delivered ? { delivered } : {};
                 orders = yield Order_1.default.find(filter)
                     .limit(Number(size))
@@ -36,9 +36,9 @@ class OrdersController {
                 })
                     .sort({ createdAt: 'desc' })
                     .select('-__v');
-                //_  Get total documents
+                //  Get total documents
                 const count = yield Order_1.default.countDocuments(filter);
-                //_ Return the orders (with / without filters), total pages and current page
+                // Return the orders (with / without filters), total pages and current page
                 res.json({
                     orders,
                     totalPages: Math.ceil(count / Number(size)),
@@ -53,14 +53,14 @@ class OrdersController {
     //* Create Order
     createOrder(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            //_ Check if there are errors
+            // Check if there are errors
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty())
                 return res.status(400).json({ errors: errors.array() });
             try {
                 const { client, details } = req.body;
-                //_ Verify if the quantity is greater than the stock
-                //_ or if the product is available
+                // Verify if the quantity is greater than the stock
+                // or if the product is available
                 const idsArr = details.map((prod) => prod.product);
                 let i = 0;
                 let total = 0;
@@ -74,13 +74,13 @@ class OrdersController {
                             return res.status(400).json({ msg: 'The product is not available.' });
                         }
                         else {
-                            //_ Remove the quantity selected from the stock
+                            // Remove the quantity selected from the stock
                             const newProduct = {
                                 name: product[0].name,
                                 price: product[0].price,
                                 stock: product[0].stock - details[i].quantity,
                             };
-                            //_ Total
+                            // Total
                             total += product[0].price * details[i].quantity;
                             yield Product_1.default.findByIdAndUpdate({ _id: product[0].id }, { $set: newProduct }, { new: true });
                         }
@@ -90,13 +90,13 @@ class OrdersController {
                     }
                     i++;
                 }
-                //_ Create the new order
+                // Create the new order
                 const order = new Order_1.default({
                     client,
                     details,
                     total: total.toFixed(2)
                 });
-                //_ Insert into the Database
+                // Insert into the Database
                 yield order.save();
                 res.status(201).json({
                     order,
@@ -113,11 +113,11 @@ class OrdersController {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
             try {
-                //_ Check if the order exists
+                // Check if the order exists
                 let order = yield Order_1.default.findById(id);
                 if (!order)
                     return res.status(404).json({ msg: 'Order not found.' });
-                //_ Update the Quantity of the products
+                // Update the Quantity of the products
                 const { details } = order;
                 const productsArr = details.map(detail => detail.product);
                 let i = 0;
@@ -136,7 +136,7 @@ class OrdersController {
                     }
                     i++;
                 }
-                //_ Remove order from the database
+                // Remove order from the database
                 yield Order_1.default.findByIdAndRemove(id);
                 res.status(200).json({ msg: 'Order canceled.' });
             }
@@ -149,12 +149,12 @@ class OrdersController {
     deliverOrder(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                //_ Check if the order exists
+                // Check if the order exists
                 const { id } = req.params;
                 let order = yield Order_1.default.findById(id);
                 if (!order)
                     return res.status(404).json({ msg: 'Order not found.' });
-                //_ Mark order as delivered
+                // Mark order as delivered
                 yield Order_1.default.findOneAndUpdate({ _id: id }, { delivered: true }, { updatedAt: Date.now() });
                 res.status(200).json({
                     order,

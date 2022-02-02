@@ -12,13 +12,15 @@ class OrdersRoutes {
 	}
 
 	config(): void {
-		this.router.get('/',
-			authMiddleware,
-			ordersController.getOrders
-		);
+		this.router.use(authMiddleware);
+
+		this.router.get('/', ordersController.getOrders);
+
+		this.router.put('/cancel/:id', ordersController.cancelOrder);
+
+		this.router.put('/deliver/:id', ordersController.deliverOrder);
 
 		this.router.post('/new',
-			authMiddleware,
 			[
 				check('client', 'Customer ID invalid.').isMongoId(),
 				check('details', 'Details of the order should not be empty').not().isEmpty(),
@@ -28,16 +30,6 @@ class OrdersRoutes {
 				check('details.*.quantity', 'Quantity of the product should be a number.').isNumeric(),
 			],
 			ordersController.createOrder
-		);
-
-		this.router.put('/cancel/:id',
-			authMiddleware,
-			ordersController.cancelOrder
-		);
-
-		this.router.put('/deliver/:id',
-			authMiddleware,
-			ordersController.deliverOrder
 		);
 	}
 }

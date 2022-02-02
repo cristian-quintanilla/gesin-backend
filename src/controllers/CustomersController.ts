@@ -34,18 +34,18 @@ class CustomersController {
 
 	//* Create Customer
 	public createCustomer = async (req: Request, res: Response) => {
-		//_ Chech if there are errors
+		// Chech if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
 		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
 		try {
 			const { firstName, lastName, company, email, address, phone } = req.body;
 
-			//_ Check if the Email already exists
+			// Check if the Email already exists
 			const customer = await CustomerModel.findOne({ email });
 			if (customer) return res.status(400).json({ msg: 'E-mail is already in use.' });
 
-			//_ Create the customer
+			// Create the customer
 			const newCustomer: Customer = new CustomerModel({
 				firstName,
 				lastName,
@@ -55,7 +55,7 @@ class CustomersController {
 				phone
 			});
 
-			//_ Insert into the Database
+			// Insert into the Database
 			await newCustomer.save();
 			res.status(201).json({
 				customer: newCustomer,
@@ -69,12 +69,12 @@ class CustomersController {
 	//* Delete Customber
 	public deleteCustomer = async (req: Request, res: Response) => {
 		try {
-			//_ Check if the Customer is in the Database
+			// Check if the Customer is in the Database
 			const { id } = req.params;
 			const customer = await CustomerModel.findById(id);
 			if (!customer) return res.status(404).json({ msg: 'Customer not found.' });
 
-			//_ Delete the Customer (Change Status)
+			// Delete the Customer (Change Status)
 			await customer.updateOne({ status: false });
 			res.status(200).json({ msg: 'Customer deleted' });
 		} catch (err) {
@@ -84,15 +84,15 @@ class CustomersController {
 
 	//* Update Customer
 	public updateCustomer = async (req: Request, res: Response) => {
-		//_ Chech if there are errors
+		// Chech if there are errors
 		const errors: Result<ValidationError> = validationResult(req);
 		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
-		//_ Extract Customer information
+		// Extract Customer information
 		const { id } = req.params;
 		const { firstName, lastName, company, email, address, phone } = req.body;
 
-		//_ Create a new Object
+		// Create a new Object
 		const newCustomer: CustomerType = {
 			firstName,
 			lastName,
@@ -103,11 +103,11 @@ class CustomersController {
 		};
 
 		try {
-			//_ Check if the user exists
+			// Check if the user exists
 			let customer = await CustomerModel.findById(id);
 			if (!customer) return res.status(404).json({ msg: 'Customer not found.' });
 
-			//_ Update data
+			// Update data
 			customer = await CustomerModel.findByIdAndUpdate(
 				{ _id: id },
 				{ $set: newCustomer },

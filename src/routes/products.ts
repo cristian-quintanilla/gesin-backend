@@ -12,18 +12,15 @@ class ProductsRoutes {
 	}
 
 	config(): void {
-		this.router.get('/',
-			authMiddleware,
-			productsController.getProducts
-		);
+		this.router.use(authMiddleware);
 
-		this.router.get('/:id',
-			authMiddleware,
-			productsController.getProduct
-		);
+		this.router.get('/', productsController.getProducts);
+
+		this.router.get('/:id', productsController.getProduct);
+
+		this.router.delete('/delete/:id', productsController.deleteProduct);
 
 		this.router.post('/create',
-			authMiddleware,
 			[
 				check('name', 'The name of the product is required.').not().isEmpty(),
 				check('stock', 'The stock of the product is required.').notEmpty(),
@@ -34,13 +31,7 @@ class ProductsRoutes {
 			productsController.createProduct
 		);
 
-		this.router.delete('/delete/:id',
-			authMiddleware,
-			productsController.deleteProduct
-		);
-
 		this.router.put('/edit/:id',
-			authMiddleware,
 			[
 				check('name', 'The name of the product is required.').not().isEmpty(),
 				check('stock', 'The stock of the product is required.').notEmpty(),

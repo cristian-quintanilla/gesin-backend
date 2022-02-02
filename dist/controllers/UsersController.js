@@ -20,26 +20,26 @@ class UsersController {
     constructor() {
         //* Create User
         this.createUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            //_ Chech if there are errors
+            // Chech if there are errors
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty())
                 return res.status(400).json({ errors: errors.array() });
             try {
                 const { name, email, password } = req.body;
-                //_ Check if the Email already exists
+                // Check if the Email already exists
                 const user = yield User_1.default.findOne({ email });
                 if (user)
                     return res.status(400).json({ msg: 'E-mail is already in use.' });
-                //_ Create the user
+                // Create the user
                 const newUser = new User_1.default({
                     name,
                     email,
                     password,
                 });
-                //_ Encrypt the password
+                // Encrypt the password
                 const salt = yield bcryptjs_1.default.genSalt(10);
                 newUser.password = yield bcryptjs_1.default.hash(password, salt);
-                //_ Save the user
+                // Save the user
                 yield newUser.save();
                 res.status(201).json({ msg: 'User created successfully.' });
             }

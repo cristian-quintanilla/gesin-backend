@@ -12,18 +12,15 @@ class CustomersRoutes {
 	}
 
 	config(): void {
-		this.router.get('/',
-			authMiddleware,
-			customersController.getCustomers
-		);
+		this.router.use(authMiddleware);
 
-		this.router.get('/:id',
-			authMiddleware,
-			customersController.getCustomer
-		);
+		this.router.get('/', customersController.getCustomers);
+
+		this.router.get('/:id', customersController.getCustomer);
+
+		this.router.delete('/delete/:id', customersController.deleteCustomer);
 
 		this.router.post('/create',
-			authMiddleware,
 			[
 				check('firstName', 'The first name is required.').not().isEmpty(),
 				check('lastName', 'The last name is required.').not().isEmpty(),
@@ -33,13 +30,7 @@ class CustomersRoutes {
 			customersController.createCustomer
 		);
 
-		this.router.delete('/delete/:id',
-			authMiddleware,
-			customersController.deleteCustomer
-		);
-
 		this.router.put('/edit/:id',
-			authMiddleware,
 			[
 				check('firstName', 'The first name is required.').not().isEmpty(),
 				check('lastName', 'The last name is required.').not().isEmpty(),

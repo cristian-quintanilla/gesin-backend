@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ordersRoutes = void 0;
 const express_1 = require("express");
 const express_validator_1 = require("express-validator");
-const controllers_1 = require("../controllers");
 const auth_1 = __importDefault(require("../middlewares/auth"));
+const validate_1 = __importDefault(require("../middlewares/validate"));
+const controllers_1 = require("../controllers");
 class OrdersRoutes {
     constructor() {
         this.router = (0, express_1.Router)();
@@ -25,6 +26,7 @@ class OrdersRoutes {
             (0, express_validator_1.check)('details.*.product', 'Product ID invalid.').isMongoId(),
             (0, express_validator_1.check)('details.*.quantity', 'Quantity of the product is required.').not().isEmpty(),
             (0, express_validator_1.check)('details.*.quantity', 'Quantity of the product should be a number.').isNumeric(),
+            validate_1.default,
         ], controllers_1.ordersController.createOrder);
     }
 }

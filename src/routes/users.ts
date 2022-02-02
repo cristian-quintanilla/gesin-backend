@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-import { usersController } from '../controllers';
 import authMiddleware from '../middlewares/auth';
+import validateFields from '../middlewares/validate';
+import { usersController } from '../controllers';
 
 class UsersRoutes {
 	public router: Router = Router();
@@ -19,6 +20,7 @@ class UsersRoutes {
 				check('email', 'Invalid email.').isEmail(),
 				check('password', 'The password is required.').not().isEmpty(),
 				check('password', 'The password must have at least 8 characters.').isLength({ min: 8 }),
+				validateFields,
 			],
 			usersController.createUser
 		);

@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.customersController = void 0;
-const express_validator_1 = require("express-validator");
 const Customer_1 = __importDefault(require("../models/Customer"));
 class CustomersController {
     constructor() {
@@ -34,8 +33,9 @@ class CustomersController {
             try {
                 const { id } = req.params;
                 const customer = yield Customer_1.default.findById(id).select('-__v');
-                if (!customer)
+                if (!customer) {
                     return res.status(404).json({ msg: 'Customer not found.' });
+                }
                 res.json({ customer });
             }
             catch (err) {
@@ -44,16 +44,13 @@ class CustomersController {
         });
         //* Create Customer
         this.createCustomer = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            // Chech if there are errors
-            const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty())
-                return res.status(400).json({ errors: errors.array() });
             try {
                 const { firstName, lastName, company, email, address, phone } = req.body;
                 // Check if the Email already exists
                 const customer = yield Customer_1.default.findOne({ email });
-                if (customer)
+                if (customer) {
                     return res.status(400).json({ msg: 'E-mail is already in use.' });
+                }
                 // Create the customer
                 const newCustomer = new Customer_1.default({
                     firstName,
@@ -80,8 +77,9 @@ class CustomersController {
                 // Check if the Customer is in the Database
                 const { id } = req.params;
                 const customer = yield Customer_1.default.findById(id);
-                if (!customer)
+                if (!customer) {
                     return res.status(404).json({ msg: 'Customer not found.' });
+                }
                 // Delete the Customer (Change Status)
                 yield customer.updateOne({ status: false });
                 res.status(200).json({ msg: 'Customer deleted' });
@@ -92,10 +90,6 @@ class CustomersController {
         });
         //* Update Customer
         this.updateCustomer = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            // Chech if there are errors
-            const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty())
-                return res.status(400).json({ errors: errors.array() });
             // Extract Customer information
             const { id } = req.params;
             const { firstName, lastName, company, email, address, phone } = req.body;
@@ -111,8 +105,9 @@ class CustomersController {
             try {
                 // Check if the user exists
                 let customer = yield Customer_1.default.findById(id);
-                if (!customer)
+                if (!customer) {
                     return res.status(404).json({ msg: 'Customer not found.' });
+                }
                 // Update data
                 customer = yield Customer_1.default.findByIdAndUpdate({ _id: id }, { $set: newCustomer }, { new: true });
                 res.status(200).json({

@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ordersController = void 0;
-const express_validator_1 = require("express-validator");
 const Order_1 = __importDefault(require("../models/Order"));
 const Product_1 = __importDefault(require("../models/Product"));
 class OrdersController {
@@ -53,10 +52,6 @@ class OrdersController {
     //* Create Order
     createOrder(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Check if there are errors
-            const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty())
-                return res.status(400).json({ errors: errors.array() });
             try {
                 const { client, details } = req.body;
                 // Verify if the quantity is greater than the stock
@@ -115,8 +110,9 @@ class OrdersController {
             try {
                 // Check if the order exists
                 let order = yield Order_1.default.findById(id);
-                if (!order)
+                if (!order) {
                     return res.status(404).json({ msg: 'Order not found.' });
+                }
                 // Update the Quantity of the products
                 const { details } = order;
                 const productsArr = details.map(detail => detail.product);
@@ -152,8 +148,9 @@ class OrdersController {
                 // Check if the order exists
                 const { id } = req.params;
                 let order = yield Order_1.default.findById(id);
-                if (!order)
+                if (!order) {
                     return res.status(404).json({ msg: 'Order not found.' });
+                }
                 // Mark order as delivered
                 yield Order_1.default.findOneAndUpdate({ _id: id }, { delivered: true }, { updatedAt: Date.now() });
                 res.status(200).json({

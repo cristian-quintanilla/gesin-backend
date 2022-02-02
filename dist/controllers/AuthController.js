@@ -13,28 +13,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authController = void 0;
-const express_validator_1 = require("express-validator");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const generateJWT_1 = __importDefault(require("../helpers/generateJWT"));
 const User_1 = __importDefault(require("../models/User"));
 class AuthController {
     constructor() {
         //* Authenticate User
         this.authenticateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            // Chech if there are errors
-            const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty())
-                return res.status(400).json({ errors: errors.array() });
+            const { email, password } = req.body;
             try {
                 // Verify if the user exists
-                const { email, password } = req.body;
                 let user = yield User_1.default.findOne({ email });
-                if (!user)
+                if (!user) {
                     return res.status(400).json({ msg: 'No User with that E-mail.' });
+                }
                 // Verify if the password is correct
                 const passwordCorrect = yield bcryptjs_1.default.compare(password, user.password);
-                if (!passwordCorrect)
+                if (!passwordCorrect) {
                     return res.status(400).json({ msg: 'Password is incorrect.' });
+                }
                 // Create and assign a token
                 const payload = {
                     user: {
@@ -42,14 +39,8 @@ class AuthController {
                         name: user.name,
                     }
                 };
-                // Expires in 24 hours
-                jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET, {
-                    expiresIn: '24h'
-                }, (err, token) => {
-                    if (err)
-                        throw err;
-                    res.json({ token });
-                });
+                const token = yield (0, generateJWT_1.default)(payload);
+                res.status(201).json({ token });
             }
             catch (err) {
                 res.status(401).json({ msg: 'Unauthorized user.' });
@@ -59,7 +50,6 @@ class AuthController {
         this.getAuthenticatedUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             var _a;
             try {
-                // Get the User
                 const user = yield User_1.default.findById((_a = req.user) === null || _a === void 0 ? void 0 : _a._id).select('-password');
                 res.json({ user });
             }

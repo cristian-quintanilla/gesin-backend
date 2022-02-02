@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { Result, ValidationError, validationResult } from 'express-validator';
 
 import { CustomerType } from '../types';
 import CustomerModel, { Customer } from '../models/Customer';
@@ -24,7 +23,9 @@ class CustomersController {
 			const { id } = req.params;
 			const customer = await CustomerModel.findById(id).select('-__v');
 
-			if (!customer) return res.status(404).json({ msg: 'Customer not found.' });
+			if (!customer) {
+				return res.status(404).json({ msg: 'Customer not found.' });
+			}
 
 			res.json({ customer });
 		} catch (err) {
@@ -34,16 +35,14 @@ class CustomersController {
 
 	//* Create Customer
 	public createCustomer = async (req: Request, res: Response) => {
-		// Chech if there are errors
-		const errors: Result<ValidationError> = validationResult(req);
-		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
 		try {
 			const { firstName, lastName, company, email, address, phone } = req.body;
 
 			// Check if the Email already exists
 			const customer = await CustomerModel.findOne({ email });
-			if (customer) return res.status(400).json({ msg: 'E-mail is already in use.' });
+			if (customer) {
+				return res.status(400).json({ msg: 'E-mail is already in use.' });
+			}
 
 			// Create the customer
 			const newCustomer: Customer = new CustomerModel({
@@ -72,7 +71,9 @@ class CustomersController {
 			// Check if the Customer is in the Database
 			const { id } = req.params;
 			const customer = await CustomerModel.findById(id);
-			if (!customer) return res.status(404).json({ msg: 'Customer not found.' });
+			if (!customer) {
+				return res.status(404).json({ msg: 'Customer not found.' });
+			}
 
 			// Delete the Customer (Change Status)
 			await customer.updateOne({ status: false });
@@ -84,10 +85,6 @@ class CustomersController {
 
 	//* Update Customer
 	public updateCustomer = async (req: Request, res: Response) => {
-		// Chech if there are errors
-		const errors: Result<ValidationError> = validationResult(req);
-		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
 		// Extract Customer information
 		const { id } = req.params;
 		const { firstName, lastName, company, email, address, phone } = req.body;
@@ -105,7 +102,9 @@ class CustomersController {
 		try {
 			// Check if the user exists
 			let customer = await CustomerModel.findById(id);
-			if (!customer) return res.status(404).json({ msg: 'Customer not found.' });
+			if (!customer) {
+				return res.status(404).json({ msg: 'Customer not found.' });
+			}
 
 			// Update data
 			customer = await CustomerModel.findByIdAndUpdate(

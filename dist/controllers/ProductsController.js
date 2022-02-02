@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productsController = void 0;
-const express_validator_1 = require("express-validator");
 const Product_1 = __importDefault(require("../models/Product"));
 class ProductsController {
     //* Get all Products
@@ -37,8 +36,9 @@ class ProductsController {
             try {
                 const { id } = req.params;
                 const product = yield Product_1.default.findById(id).select('-__v');
-                if (!product)
+                if (!product) {
                     return res.status(404).json({ msg: 'Product not found.' });
+                }
                 res.json({ product });
             }
             catch (err) {
@@ -49,10 +49,6 @@ class ProductsController {
     //* Create Product
     createProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Check if there are errors
-            const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty())
-                return res.status(400).json({ errors: errors.array() });
             try {
                 const { name, stock, price } = req.body;
                 // Create the product
@@ -80,8 +76,9 @@ class ProductsController {
                 // Check if the Product is in the Database
                 const { id } = req.params;
                 const product = yield Product_1.default.findById(id);
-                if (!product)
+                if (!product) {
                     return res.status(404).json({ msg: 'Product not found.' });
+                }
                 // Delete the Product (Change Status)
                 yield product.updateOne({ status: false });
                 res.status(200).json({ msg: 'Product deleted.' });
@@ -94,10 +91,6 @@ class ProductsController {
     //* Update Product
     updateProduct(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // Check if there are errors
-            const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty())
-                return res.status(400).json({ errors: errors.array() });
             // Extract Product information
             const { id } = req.params;
             const { name, stock, price } = req.body;
@@ -110,8 +103,9 @@ class ProductsController {
             try {
                 // Check if the product exists
                 let product = yield Product_1.default.findById(id);
-                if (!product)
+                if (!product) {
                     return res.status(404).json({ msg: 'Product not found.' });
+                }
                 // Update data
                 product = yield Product_1.default.findByIdAndUpdate({ _id: id }, { $set: newProduct }, { new: true });
                 res.status(200).json({

@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-import { productsController } from '../controllers';
 import authMiddleware from '../middlewares/auth';
+import validateFields from '../middlewares/validate';
+import { productsController } from '../controllers';
 
 class ProductsRoutes {
 	public router: Router = Router();
@@ -27,6 +28,7 @@ class ProductsRoutes {
 				check('stock', 'The stock of the product should be a number.').isNumeric(),
 				check('price', 'The price of the product is required.').not().isEmpty(),
 				check('price', 'The price of the product should be a number.').isNumeric(),
+				validateFields,
 			],
 			productsController.createProduct
 		);
@@ -38,6 +40,7 @@ class ProductsRoutes {
 				check('stock', 'The stock of the product should be a number.').isNumeric(),
 				check('price', 'The price of the product is required.').not().isEmpty(),
 				check('price', 'The price of the product should be a number.').isNumeric(),
+				validateFields,
 			],
 			productsController.updateProduct
 		);

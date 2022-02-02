@@ -13,23 +13,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersController = void 0;
-const express_validator_1 = require("express-validator");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const User_1 = __importDefault(require("../models/User"));
 class UsersController {
     constructor() {
         //* Create User
         this.createUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            // Chech if there are errors
-            const errors = (0, express_validator_1.validationResult)(req);
-            if (!errors.isEmpty())
-                return res.status(400).json({ errors: errors.array() });
             try {
                 const { name, email, password } = req.body;
                 // Check if the Email already exists
                 const user = yield User_1.default.findOne({ email });
-                if (user)
+                if (user) {
                     return res.status(400).json({ msg: 'E-mail is already in use.' });
+                }
                 // Create the user
                 const newUser = new User_1.default({
                     name,
@@ -37,7 +33,7 @@ class UsersController {
                     password,
                 });
                 // Encrypt the password
-                const salt = yield bcryptjs_1.default.genSalt(10);
+                const salt = yield bcryptjs_1.default.genSalt();
                 newUser.password = yield bcryptjs_1.default.hash(password, salt);
                 // Save the user
                 yield newUser.save();

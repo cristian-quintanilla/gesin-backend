@@ -26,8 +26,8 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = require("dotenv");
 const path_1 = require("path");
-const database_1 = require("./config/database");
 const routes = __importStar(require("./routes"));
+const database_1 = require("./config/database");
 //* Configure Environment Variables
 (0, dotenv_1.config)({ path: (0, path_1.resolve)(__dirname, '../.env.dev') });
 //* Create the Server

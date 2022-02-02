@@ -3,8 +3,8 @@ import cors from 'cors';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 
-import { connectDatabase } from './config/database';
 import * as routes from './routes';
+import { connectDatabase } from './config/database';
 
 //* Configure Environment Variables
 config({ path: resolve(__dirname, '../.env.dev') });

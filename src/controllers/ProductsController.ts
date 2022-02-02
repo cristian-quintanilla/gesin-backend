@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { Result, ValidationError, validationResult } from 'express-validator';
 
 import ProductModel, { Product } from '../models/Product';
 import { ProductType } from '../types';
@@ -25,7 +24,9 @@ class ProductsController {
 			const { id } = req.params;
 			const product = await ProductModel.findById(id).select('-__v');
 
-			if (!product) return res.status(404).json({ msg: 'Product not found.' });
+			if (!product) {
+				return res.status(404).json({ msg: 'Product not found.' });
+			}
 
 			res.json({ product });
 		} catch (err) {
@@ -35,10 +36,6 @@ class ProductsController {
 
 	//* Create Product
 	public async createProduct (req: Request, res: Response) {
-		// Check if there are errors
-		const errors: Result<ValidationError> = validationResult(req);
-		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
 		try {
 			const { name, stock, price } = req.body;
 
@@ -66,7 +63,9 @@ class ProductsController {
 			// Check if the Product is in the Database
 			const { id } = req.params;
 			const product = await ProductModel.findById(id);
-			if (!product) return res.status(404).json({ msg: 'Product not found.' });
+			if (!product) {
+				return res.status(404).json({ msg: 'Product not found.' });
+			}
 
 			// Delete the Product (Change Status)
 			await product.updateOne({ status: false });
@@ -78,10 +77,6 @@ class ProductsController {
 
 	//* Update Product
 	public async updateProduct (req: Request, res: Response) {
-		// Check if there are errors
-		const errors: Result<ValidationError> = validationResult(req);
-		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
 		// Extract Product information
 		const { id } = req.params;
 		const { name, stock, price } = req.body;
@@ -96,7 +91,9 @@ class ProductsController {
 		try {
 			// Check if the product exists
 			let product = await ProductModel.findById(id);
-			if (!product) return res.status(404).json({ msg: 'Product not found.'});
+			if (!product) {
+				return res.status(404).json({ msg: 'Product not found.'});
+			}
 
 			// Update data
 			product = await ProductModel.findByIdAndUpdate(

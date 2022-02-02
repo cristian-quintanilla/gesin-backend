@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-import { customersController } from '../controllers';
 import authMiddleware from '../middlewares/auth';
+import validateFields from '../middlewares/validate';
+import { customersController } from '../controllers';
 
 class CustomersRoutes {
 	public router: Router = Router();
@@ -26,6 +27,7 @@ class CustomersRoutes {
 				check('lastName', 'The last name is required.').not().isEmpty(),
 				check('company', 'The company name is required.').not().isEmpty(),
 				check('email', 'Invalid email.').isEmail(),
+				validateFields,
 			],
 			customersController.createCustomer
 		);
@@ -36,6 +38,7 @@ class CustomersRoutes {
 				check('lastName', 'The last name is required.').not().isEmpty(),
 				check('company', 'The company name is required.').not().isEmpty(),
 				check('email', 'Invalid email.').isEmail(),
+				validateFields,
 			],
 			customersController.updateCustomer
 		);

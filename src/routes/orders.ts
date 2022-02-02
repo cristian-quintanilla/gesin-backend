@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-import { ordersController } from '../controllers';
 import authMiddleware from '../middlewares/auth';
+import validateFields from '../middlewares/validate';
+import { ordersController } from '../controllers';
 
 class OrdersRoutes {
 	public router: Router = Router();
@@ -28,6 +29,7 @@ class OrdersRoutes {
 				check('details.*.product', 'Product ID invalid.').isMongoId(),
 				check('details.*.quantity', 'Quantity of the product is required.').not().isEmpty(),
 				check('details.*.quantity', 'Quantity of the product should be a number.').isNumeric(),
+				validateFields,
 			],
 			ordersController.createOrder
 		);

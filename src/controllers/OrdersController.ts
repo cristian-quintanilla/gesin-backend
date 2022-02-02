@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import { Result, ValidationError, validationResult } from 'express-validator';
 
 import OrderModel, { Order } from '../models/Order';
-import { ProductType } from '../types';
 import ProductModel from '../models/Product';
+import { ProductType } from '../types';
 
 class OrdersController {
 	//* Get Orders
@@ -43,10 +42,6 @@ class OrdersController {
 
 	//* Create Order
 	public async createOrder (req: Request, res: Response) {
-		// Check if there are errors
-		const errors: Result<ValidationError> = validationResult(req);
-		if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-
 		try {
 			const { client, details } = req.body;
 
@@ -113,7 +108,9 @@ class OrdersController {
 		try {
 			// Check if the order exists
 			let order = await OrderModel.findById(id);
-			if (!order) return res.status(404).json({ msg: 'Order not found.' });
+			if (!order) {
+				return res.status(404).json({ msg: 'Order not found.' });
+			}
 
 			// Update the Quantity of the products
 			const { details } = order;
@@ -155,8 +152,9 @@ class OrdersController {
 			// Check if the order exists
 			const { id } = req.params;
 			let order = await OrderModel.findById(id);
-
-			if (!order) return res.status(404).json({ msg: 'Order not found.' });
+			if (!order) {
+				return res.status(404).json({ msg: 'Order not found.' });
+			}
 
 			// Mark order as delivered
 			await OrderModel.findOneAndUpdate(

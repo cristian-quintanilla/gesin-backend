@@ -15,9 +15,8 @@ const app = express();
 //* Connect to the Database
 connectDatabase();
 
-//* Enable CORS Option
-const corsOptions = {	origin: `${ process.env.FRONTEND_URL }` };
-app.use(cors(corsOptions));
+//* CORS
+app.use(cors());
 
 //* Settings
 app.set('port', process.env.PORT || 4000);
